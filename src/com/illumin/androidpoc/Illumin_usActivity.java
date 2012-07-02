@@ -4,10 +4,16 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 
+import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.mime.FormBodyPart;
 import org.apache.http.entity.mime.content.FileBody;
+import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.util.EntityUtils;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -124,18 +130,27 @@ public class Illumin_usActivity extends Activity implements OnItemClickListener 
 		@Override
 		protected Boolean doInBackground(String... params) {
 			String filePath = params[0];
-			HttpPost postRequest = new HttpPost(Illumin_usActivity.POST_URL);
-			CustomMultiPartEntity multipartEntity = new CustomMultiPartEntity(new ProgressListener() {
-				@Override
-				public void transferred(long num) {
-					publishProgress((int) ((num / (float) totalSize) * 100));
-				}
-			});
-			multipartEntity.addPart("file", new FileBody(new File(filePath)));
-			totalSize = multipartEntity.getContentLength();
-			postRequest.setEntity(multipartEntity);
+			HttpClient httpClient = new DefaultHttpClient();
+
+			HttpGet getRequest = new HttpGet("http://illuminus-android.appspot.com/upload/");
 			try {
-				new DefaultHttpClient().execute(postRequest);
+				HttpResponse httpResponse = httpClient.execute(getRequest);
+				String responseString = EntityUtils.toString(httpResponse.getEntity());
+				String postUrlString = responseString.substring(responseString.indexOf("http://illuminus-android"), responseString.indexOf("\" method=\"POST\""));
+
+				HttpPost postRequest = new HttpPost(postUrlString);
+
+				CustomMultiPartEntity multipartEntity = new CustomMultiPartEntity(new ProgressListener() {
+					@Override
+					public void transferred(long num) {
+						publishProgress((int) ((num / (float) totalSize) * 100));
+					}
+				});
+				multipartEntity.addPart(new FormBodyPart("title", new StringBody("mobile")));
+				multipartEntity.addPart("file", new FileBody(new File(filePath)));
+				totalSize = multipartEntity.getContentLength();
+				postRequest.setEntity(multipartEntity);
+				httpClient.execute(postRequest);
 				return true;
 			} catch (ClientProtocolException e) {
 				e.printStackTrace();
