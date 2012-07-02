@@ -1,4 +1,4 @@
-package com.illumin.androidpoc;
+package com.illumin.androidpoc.util;
 import java.io.FilterOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;

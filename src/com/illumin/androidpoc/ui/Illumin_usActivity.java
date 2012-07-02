@@ -1,4 +1,4 @@
-package com.illumin.androidpoc;
+package com.illumin.androidpoc.ui;
 
 import java.io.File;
 import java.io.IOException;
@@ -29,13 +29,18 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.illumin.androidpoc.CustomMultiPartEntity.ProgressListener;
+import com.illumin.androidpoc.R;
+import com.illumin.androidpoc.R.id;
+import com.illumin.androidpoc.R.layout;
+import com.illumin.androidpoc.util.CustomMultiPartEntity;
+import com.illumin.androidpoc.util.CustomMultiPartEntity.ProgressListener;
 
 public class Illumin_usActivity extends Activity implements OnItemClickListener {
 	private static final String TAG = "Illumin_usActivity";
-	private final int PICK_FILE = 0;
+	private static final int REQ_RECORD = 0;
+	private final static int REQ_PICK_FILE = 0;
 	private ListView mListView;
-	private String[] mListItemStrings = new String[] { "Select file to upload" };
+	private String[] mListItemStrings = new String[] { "Select file to upload", "Record video" };
 
 	public static String POST_URL = "http://test.teamkollab.com/illuminous/server.php";
 
@@ -55,9 +60,11 @@ public class Illumin_usActivity extends Activity implements OnItemClickListener 
 		case 0:
 			Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
 			intent.setType("video/*");
-			startActivityForResult(Intent.createChooser(intent, "Pick an app"), PICK_FILE);
+			startActivityForResult(Intent.createChooser(intent, "Pick an app"), REQ_PICK_FILE);
 			break;
-
+		case 1:
+			Intent recordeIntent = new Intent(this, VideoRecordingActivity.class);
+			startActivityForResult(recordeIntent, REQ_RECORD);
 		default:
 			break;
 		}
@@ -81,7 +88,7 @@ public class Illumin_usActivity extends Activity implements OnItemClickListener 
 			//			}
 
 			switch (requestCode) {
-			case PICK_FILE:
+			case REQ_PICK_FILE:
 
 				Uri uri = data.getData();
 				Cursor cursor = getContentResolver().query(uri, new String[] { android.provider.MediaStore.Video.VideoColumns.DATA }, null, null, null);
