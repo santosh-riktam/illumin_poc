@@ -1,7 +1,7 @@
 illumin
 ===========
 
-Folder stucture
+Folder structure
 --
 
 libs : Contains private libraries.
@@ -10,15 +10,15 @@ res : Contains application resources, such as drawable files, layout files, and 
 
 src : Contains source code files (such as .java or .aidl files) go here as well.
 
-.classpath : classpath used by java compiler
+.classpath : Classpath used by java compiler
 
-.project : eclipse configuration file
+.project : Eclipse project configuration file
 
 AndroidManifest.xml : The control file that describes the nature of the application and each of its components. For instance, it describes: certain qualities about the activities, services, intent receivers, and content providers; what permissions are requested; what external libraries are needed; what device features are required, what API Levels are supported or required; and others.
 
-proguard-project.txt : proguard(Java class file shrinker, optimizer, obfuscator, and preverifier) configuration file
+proguard-project.txt : proguard(Java class file shrinker, optimizer, obfuscator, and preverifier) project configuration file
 
-project.properties : Eclipse configuration file
+project.properties : Eclipse project configuration file
 
 
 First screen
